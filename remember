@@ -1,0 +1,84 @@
+package edu.alatoo.GST.api.controllers;
+
+import edu.alatoo.GST.api.dtos.CommentDto;
+import edu.alatoo.GST.api.services.CommentService;
+import edu.alatoo.GST.api.utils.ApiResponse;
+import edu.alatoo.GST.api.utils.ApiResponseStatus;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/comments")
+public class CommentController {
+
+    private final CommentService commentService;
+
+    @Autowired
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Create a new comment",
+            tags = {"Comments"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            })
+    public ApiResponse<CommentDto> createComment(@Valid @RequestBody CommentDto commentDto) {
+        return new ApiResponse<>(commentService.createComment(commentDto));
+    }
+
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get a comment by ID",
+            tags = {"Comments"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "404", description = "Not Found"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            })
+    public ApiResponse<CommentDto> getCommentById(@PathVariable Long id) {
+        return new ApiResponse<>(commentService.getCommentById(id));
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Update a comment by ID",
+            tags = {"Comments"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "404", description = "Not Found"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            })
+    public ApiResponse<CommentDto> updateComment(@PathVariable Long id, @Valid @RequestBody CommentDto commentDto) {
+        return new ApiResponse<>(commentService.updateComment(id, commentDto));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    @Operation(summary = "Delete a comment by ID",
+            tags = {"Comments"},
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = ApiResponse.class))),
+                    @ApiResponse(responseCode = "400", description = "Bad Request"),
+                    @ApiResponse(responseCode = "404", description = "Not Found"),
+                    @ApiResponse(responseCode = "500", description = "Internal Server Error")
+            })
+    public ApiResponse<Void> deleteComment(@PathVariable Long id) {
+        commentService.deleteComment(id);
+        return new ApiResponse<>(
