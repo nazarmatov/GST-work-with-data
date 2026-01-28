@@ -2,6 +2,7 @@ package edu.alatoo.GST.api.controllers;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserDto>> getAllUsers(Pageable pageable){
+    public ResponseEntity<Page<UserDto>> getAllUsers(@PageableDefault(size = 15) Pageable pageable){
         log.info("get all Users");
         Page<UserDto> users = userService.getAllUsers(pageable);
         return ResponseEntity.ok(users);

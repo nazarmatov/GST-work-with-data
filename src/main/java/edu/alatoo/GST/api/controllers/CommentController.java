@@ -2,6 +2,7 @@ package edu.alatoo.GST.api.controllers;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,7 +37,7 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<CommentDto>> getAllCommentByEducator(@PathVariable Long educatorId, Pageable pageable){
+    public ResponseEntity<Page<CommentDto>> getAllCommentByEducator(@PathVariable Long educatorId,@PageableDefault(size = 30) Pageable pageable){
         log.info("fet all educators comment");
         Page<CommentDto> comments = commentService.getAllCommentsByEducator(educatorId, pageable);
         return ResponseEntity.ok(comments);

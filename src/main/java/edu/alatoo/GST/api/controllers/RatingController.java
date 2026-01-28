@@ -2,6 +2,7 @@ package edu.alatoo.GST.api.controllers;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,7 +37,7 @@ public class RatingController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<RatingDto>> getRatingsByEducator(@PathVariable long educatorId, Pageable pageable){
+    public ResponseEntity<Page<RatingDto>> getRatingsByEducator(@PathVariable long educatorId,@PageableDefault(size = 20) Pageable pageable){
         log.info("get all ratings of educator");
         Page<RatingDto> ratings = ratingService.getAllByEducatorId(educatorId, pageable);
         return ResponseEntity.ok(ratings);
